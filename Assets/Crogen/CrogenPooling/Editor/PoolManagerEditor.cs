@@ -18,7 +18,14 @@ public class PoolManagerEditor : Editor
 
     public override void OnInspectorGUI()
     {
+        if(_currentSelectedPoolBase == null)
+		{
+            SelectPoolBase(0);
+        }
+
         GUILayout.Label("PoolBase");
+
+        if (_poolManager.poolBaseList == null) return;
 
         for (int i = 0; i < _poolManager.poolBaseList.Count; ++i)
 		{
@@ -97,8 +104,12 @@ public class PoolManagerEditor : Editor
 
     private void SelectPoolBase(int index)
 	{
-        _currentSelectedPoolBase = _poolManager.poolBaseList[index];
-        _currentSelectedIndex = index;
+        try
+        {
+            _currentSelectedPoolBase = _poolManager.poolBaseList[index];
+            _currentSelectedIndex = index;
+        }
+        catch (System.Exception) { }
     }
 
     private void GeneratePoolingEnumFile()
