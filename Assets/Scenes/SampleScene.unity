@@ -119,6 +119,62 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &27484402
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 27484404}
+  - component: {fileID: 27484403}
+  m_Layer: 0
+  m_Name: SoundManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &27484403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 27484402}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2d9db043bb069e4ba8e917564100320, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundDataSOList:
+  - {fileID: 11400000, guid: dfef5751b2f0b9d45affbbac60354f17, type: 2}
+  soundDataList:
+  - name: debris-break-253779
+    type: 1
+    clip: {fileID: 8300000, guid: 20a2daa325599bb4eaaa0e71e61f2f2c, type: 3}
+  - name: break-the-action-sport-upbeat-rock-intro-185016
+    type: 2
+    clip: {fileID: 8300000, guid: aa6390dc07456f7408e1973d5184c9ff, type: 3}
+  - name: tea-time-on-a-rainy-day-everyday-natural-piano-205092
+    type: 2
+    clip: {fileID: 8300000, guid: 6fe99f33da85df54cb5b8eef1ffecdbd, type: 3}
+--- !u!4 &27484404
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 27484402}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -426,6 +482,50 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1549846209
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1549846211}
+  - component: {fileID: 1549846210}
+  m_Layer: 0
+  m_Name: TestScript
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1549846210
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1549846209}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a961b2f38be045142bd9068ddf9bce23, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1549846211
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1549846209}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1690721578
 GameObject:
   m_ObjectHideFlags: 0
@@ -456,9 +556,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   poolBaseList:
-  - {fileID: 11400000, guid: 3280a85e0747fd7428513dbff3c09a0f, type: 2}
-  - {fileID: 11400000, guid: 718434f5f088e2a41bc154023a21552c, type: 2}
-  poolingPairs: []
+  - {fileID: 11400000, guid: 265ad6051dcb556468478c955d01d7a6, type: 2}
+  poolingPairs:
+  - poolType: SoundPlayer
+    prefab: {fileID: 1598646136496023633, guid: 759661f82fd32e24eb329c60f21b235f, type: 3}
+    poolCount: 20
 --- !u!4 &1690721580
 Transform:
   m_ObjectHideFlags: 0
@@ -482,3 +584,5 @@ SceneRoots:
   - {fileID: 410087041}
   - {fileID: 832575519}
   - {fileID: 1690721580}
+  - {fileID: 27484404}
+  - {fileID: 1549846211}

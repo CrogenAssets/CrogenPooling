@@ -18,11 +18,6 @@ public class PoolManagerEditor : Editor
 
     public override void OnInspectorGUI()
     {
-        if(_currentSelectedPoolBase == null)
-		{
-            SelectPoolBase(0);
-        }
-
         GUILayout.Label("PoolBase");
 
         if (_poolManager.poolBaseList == null) return;
@@ -39,8 +34,10 @@ public class PoolManagerEditor : Editor
             GUILayout.BeginHorizontal();
 
             if (_currentSelectedIndex == i)
+            {
                 GUI.color = Color.green;
-
+                _currentSelectedPoolBase = _poolManager.poolBaseList[i];
+            }
             if(GUILayout.Button("Select"))
 			{
                 SelectPoolBase(i);
@@ -57,13 +54,16 @@ public class PoolManagerEditor : Editor
                 SelectPoolBase(i);
             }
 
-            if (GUILayout.Button("Clone"))
+            if (_poolManager.poolBaseList[i] != null)
             {
-                var poolBase = Instantiate(_poolManager.poolBaseList[i]);
+                if (GUILayout.Button("Clone"))
+                {
+                    var poolBase = Instantiate(_poolManager.poolBaseList[i]);
 
-                CreatePoolBaseAsset(poolBase, poolBase.ToString());
-                _poolManager.poolBaseList[i] = poolBase;
-                SelectPoolBase(i);
+                    CreatePoolBaseAsset(poolBase, poolBase.ToString());
+                    _poolManager.poolBaseList[i] = poolBase;
+                    SelectPoolBase(i);
+                }
             }
 
             GUI.color = Color.white;
