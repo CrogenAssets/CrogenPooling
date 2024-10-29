@@ -1,9 +1,10 @@
-﻿2024-10-15
+﻿2024-10-29
 assetName : CrogenPooling
-version : 1.2.1
+version : 1.2.2
 
 <업데이트>
--PoolBase 카테고리 기능 추가
+-SoundPlayer 추가
+-SoundManager로 사운드를 추가한 다음 런타임 때 실행 시킬 수 있음
 
 <오브젝트 풀링 사용 방법>
 1. 새로운 오브젝트를 만든 후 "PoolManager" 컴포넌트를 추가한다.
