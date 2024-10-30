@@ -7,22 +7,17 @@ using UnityEngine.Serialization;
 
 public class SoundPlayer : MonoBehaviour, IPoolingObject
 {
-	[HideInInspector] public AudioSource audioSource;
+	[field:SerializeField] public AudioSource AudioSource { get; private set; }
 	
 	public string OriginPoolType { get; set; }
 	GameObject IPoolingObject.gameObject { get; set; }
 
 	public void SetAudioResource(AudioResource audioResource, bool loop = false)
 	{
-		audioSource.resource = audioResource;
-		audioSource.Play();
+		AudioSource.resource = audioResource;
+		AudioSource.Play();
 		if(loop == false)
 			StartCoroutine(CoroutineOnPlay());
-	}
-	
-	private void Awake()
-	{
-		audioSource = GetComponent<AudioSource>();
 	}
 
 	public void OnPop()
@@ -36,7 +31,7 @@ public class SoundPlayer : MonoBehaviour, IPoolingObject
 
 	private IEnumerator CoroutineOnPlay()
 	{
-		yield return new WaitWhile(()=>audioSource.isPlaying);
+		yield return new WaitWhile(()=>AudioSource.isPlaying);
 		this.Push();
 	}
 }

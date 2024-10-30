@@ -27,8 +27,8 @@ public class SoundManager : MonoBehaviour
     public List<SoundData> soundDataList;
     private Dictionary<string, SoundData> _soundDataDictionary;
 
-    private SoundPlayer _curBGMPlayer;
-    private SoundPlayer _oldBGMPlayer;
+    private SoundPlayer _curSoundPlayer;
+    private SoundPlayer _oldSoundPlayer;
     
     private void Awake()
     {
@@ -45,20 +45,21 @@ public class SoundManager : MonoBehaviour
             if (sd.type != SoundType.BGM) return;
             
             //사운드 재생
-            _oldBGMPlayer = _curBGMPlayer;
-            _curBGMPlayer = gameObject.Pop(SoundPoolType.SoundPlayer, Vector3.zero, Quaternion.identity) as SoundPlayer;
-            _curBGMPlayer.audioSource.loop = true;
-            _curBGMPlayer.SetAudioResource(sd.clip);
+            _oldSoundPlayer = _curSoundPlayer;
+            _curSoundPlayer = gameObject.Pop(SoundPoolType.SoundPlayer, Vector3.zero, Quaternion.identity) as SoundPlayer;
+            if(_curSoundPlayer)
+                _curSoundPlayer.AudioSource.loop = true;
+            _curSoundPlayer.SetAudioResource(sd.clip);
             
-            StartCoroutine(CoroutineFadeBGM(_oldBGMPlayer, _curBGMPlayer));
+            StartCoroutine(CoroutineFadeBGM(_oldSoundPlayer, _curSoundPlayer));
         }
     }
 
     private IEnumerator CoroutineFadeBGM(SoundPlayer oldSoundPlayer, SoundPlayer curSoundPlayer)
     {
         if(oldSoundPlayer != null)
-            oldSoundPlayer.audioSource.volume = 1;
-        curSoundPlayer.audioSource.volume = 0;
+            oldSoundPlayer.AudioSource.volume = 1;
+        curSoundPlayer.AudioSource.volume = 0;
         
         float percent = 0;
         float curTime = 0;
@@ -70,8 +71,8 @@ public class SoundManager : MonoBehaviour
             percent = curTime / duration;
 
             if(oldSoundPlayer != null)
-                oldSoundPlayer.audioSource.volume = Mathf.Lerp(1, 0, percent);
-            curSoundPlayer.audioSource.volume = Mathf.Lerp(0, 1, percent);
+                oldSoundPlayer.AudioSource.volume = Mathf.Lerp(1, 0, percent);
+            curSoundPlayer.AudioSource.volume = Mathf.Lerp(0, 1, percent);
             yield return null;
         }
         
@@ -86,7 +87,8 @@ public class SoundManager : MonoBehaviour
             
             //사운드 재생
             SoundPlayer soundPlayer = gameObject.Pop(SoundPoolType.SoundPlayer, position, Quaternion.identity) as SoundPlayer;
-            _curBGMPlayer.audioSource.loop = false;
+            if(_curSoundPlayer)
+                _curSoundPlayer.AudioSource.loop = false;
             soundPlayer.SetAudioResource(sd.clip);
         }
     }
