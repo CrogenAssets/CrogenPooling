@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60e83d80f38bc9b42a4a4456d6a35539, type: 3}
   m_Name: SoundDataSO
   m_EditorClassIdentifier: 
-  clip: {fileID: 6418180475301049370, guid: 672d4ed904bdffa409dc5a38523a543c, type: 2}
+  soundDataList: []

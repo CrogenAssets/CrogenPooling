@@ -8,16 +8,24 @@ using UnityEngine.Serialization;
 public class SoundPlayer : MonoBehaviour, IPoolingObject
 {
 	[field:SerializeField] public AudioSource AudioSource { get; private set; }
+	[field:SerializeField] public AudioMixer AudioMixer { get; private set; }
 	
 	public string OriginPoolType { get; set; }
 	GameObject IPoolingObject.gameObject { get; set; }
 
-	public void SetAudioResource(AudioResource audioResource, bool loop = false)
+	public void SetAudioResource(AudioResource audioResource, bool loop = false, float pitch = 1f)
 	{
 		AudioSource.resource = audioResource;
 		AudioSource.Play();
+		AudioSource.outputAudioMixerGroup = AudioMixer.FindMatchingGroups($"Master/{(loop ? "BGM" : "Effect")}")[0];
 		if(loop == false)
 			StartCoroutine(CoroutineOnPlay());
+		
+		AudioSource.pitch = pitch;
+	}
+
+	private void Awake()
+	{
 	}
 
 	public void OnPop()

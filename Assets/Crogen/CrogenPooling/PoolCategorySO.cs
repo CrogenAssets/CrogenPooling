@@ -10,7 +10,7 @@ public class PoolPair
     public int poolCount;
 }
 
-public class PoolBaseSO : ScriptableObject
+public class PoolCategorySO : ScriptableObject
 {
     public List<PoolPair> pairs;
 

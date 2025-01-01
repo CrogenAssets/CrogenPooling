@@ -7,9 +7,9 @@ namespace Crogen.CrogenPooling
     public static class PopCore
     {
         private static PoolManager _poolManager { get; set; }
-        private static List<PoolBaseSO> _poolBaseList;
+        private static List<PoolCategorySO> _poolBaseList;
         
-        public static void Init(PoolManager poolManager, List<PoolBaseSO> poolBaseList)
+        public static void Init(PoolManager poolManager, List<PoolCategorySO> poolBaseList)
         {
             _poolManager = poolManager;
             _poolBaseList = poolBaseList;
@@ -23,7 +23,7 @@ namespace Crogen.CrogenPooling
             {
                 IPoolingObject poolingObject;
 
-                if (PoolManager.poolDic[typeName].Count == 0)
+                if (PoolManager.poolDict[typeName].Count == 0)
                 {
 					foreach (var poolBase in _poolBaseList)
 					{
@@ -38,7 +38,7 @@ namespace Crogen.CrogenPooling
                         }
                     }
                 }
-                poolingObject = PoolManager.poolDic[typeName].Pop();
+                poolingObject = PoolManager.poolDict[typeName].Pop();
                 GameObject obj = poolingObject.gameObject;
 
                 obj.SetActive(true);
@@ -65,7 +65,7 @@ namespace Crogen.CrogenPooling
             {
                 IPoolingObject poolingObject;
 
-                if (PoolManager.poolDic[typeName].Count == 0)
+                if (PoolManager.poolDict[typeName].Count == 0)
                 {
 					foreach (var poolBase in _poolBaseList)
 					{
@@ -80,7 +80,7 @@ namespace Crogen.CrogenPooling
                         }
                     }
                 }
-                poolingObject = PoolManager.poolDic[typeName].Pop();
+                poolingObject = PoolManager.poolDict[typeName].Pop();
                 GameObject obj = poolingObject.gameObject;
 
                 obj.SetActive(true);

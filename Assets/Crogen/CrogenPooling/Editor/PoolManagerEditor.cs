@@ -1,4 +1,5 @@
 ﻿#if  UNITY_EDITOR
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using UnityEditor;
@@ -8,7 +9,7 @@ using UnityEngine;
 public class PoolManagerEditor : Editor
 {
     private PoolManager _poolManager;
-    private static PoolBaseSO _currentSelectedPoolBase;
+    private PoolCategorySO _currentSelectedPoolCategory;
     private static int _currentSelectedIndex;
 
     private void OnEnable()
@@ -20,78 +21,95 @@ public class PoolManagerEditor : Editor
     {
         GUILayout.Label("PoolBase");
 
-        if (_poolManager.poolBaseList == null) return;
-
-        for (int i = 0; i < _poolManager.poolBaseList.Count; ++i)
-		{
-            for (int j = i+1; j < _poolManager.poolBaseList.Count; ++j)
-            {
-                if (_poolManager.poolBaseList[j] == null) continue; 
-                if (_poolManager.poolBaseList[i] == _poolManager.poolBaseList[j])
-                    Debug.LogWarning("같은 PoolBase를 리스트에 추가했습니다. PoolManager를 확인해주세요.");
-            }
-
-            GUILayout.BeginHorizontal();
-
-            if (_currentSelectedIndex == i)
-            {
-                GUI.color = Color.green;
-                _currentSelectedPoolBase = _poolManager.poolBaseList[i];
-            }
-            if(GUILayout.Button("Select"))
+        if( _poolManager.poolBaseList != null )
+        {
+			for (int i = 0; i < _poolManager.poolBaseList.Count; ++i)
 			{
-                SelectPoolBase(i);
-            }
+				for (int j = i + 1; j < _poolManager.poolBaseList.Count; ++j)
+				{
+					if (_poolManager.poolBaseList[j] == null) continue;
+					if (_poolManager.poolBaseList[i] == _poolManager.poolBaseList[j])
+						Debug.LogWarning("같은 PoolBase를 리스트에 추가했습니다. PoolManager를 확인해주세요.");
+				}
 
-            _poolManager.poolBaseList[i] = EditorGUILayout.ObjectField(_poolManager.poolBaseList[i], typeof(PoolBaseSO), false) as PoolBaseSO;
+				GUILayout.BeginHorizontal();
 
-            if (GUILayout.Button("New"))
-            {
-                var poolBase = ScriptableObject.CreateInstance<PoolBaseSO>();
+				if (_currentSelectedIndex == i)
+				{
+					GUI.color = Color.green;
+					_currentSelectedPoolCategory = _poolManager.poolBaseList[i];
+				}
+				if (GUILayout.Button("Select"))
+				{
+					SelectPoolBase(i);
+				}
 
-                CreatePoolBaseAsset(poolBase);
-                _poolManager.poolBaseList[i] = poolBase;
-                SelectPoolBase(i);
-            }
+				_poolManager.poolBaseList[i] = EditorGUILayout.ObjectField(_poolManager.poolBaseList[i], typeof(PoolCategorySO), false) as PoolCategorySO;
 
-            if (_poolManager.poolBaseList[i] != null)
-            {
-                if (GUILayout.Button("Clone"))
-                {
-                    var poolBase = Instantiate(_poolManager.poolBaseList[i]);
+				if (GUILayout.Button("New"))
+				{
+					var poolBase = ScriptableObject.CreateInstance<PoolCategorySO>();
 
-                    CreatePoolBaseAsset(poolBase, poolBase.ToString());
-                    _poolManager.poolBaseList[i] = poolBase;
-                    SelectPoolBase(i);
-                }
-            }
+					CreatePoolBaseAsset(poolBase);
+					_poolManager.poolBaseList[i] = poolBase;
+					SelectPoolBase(i);
+				}
 
-            GUI.color = Color.white;
+				if (_poolManager.poolBaseList[i] != null)
+				{
+					if (GUILayout.Button("Clone"))
+					{
+						var poolBase = Instantiate(_poolManager.poolBaseList[i]);
 
-            GUILayout.EndHorizontal();
-        }
+						CreatePoolBaseAsset(poolBase, poolBase.ToString());
+						_poolManager.poolBaseList[i] = poolBase;
+						SelectPoolBase(i);
+					}
+				}
 
-        if (GUILayout.Button("+"))
+				GUI.color = Color.white;
+
+				GUILayout.EndHorizontal();
+			}
+
+		}
+
+		if (GUILayout.Button("+"))
 		{
+            if(_poolManager.poolBaseList == null) _poolManager.poolBaseList = new List<PoolCategorySO>();
             _poolManager.poolBaseList.Add(null);
             SelectPoolBase(_poolManager.poolBaseList.Count - 1);
         }
         if (GUILayout.Button("-"))
         {
-            _poolManager.poolBaseList.Remove(_currentSelectedPoolBase);
+            _poolManager.poolBaseList.Remove(_currentSelectedPoolCategory);
             SelectPoolBase(_poolManager.poolBaseList.Count - 1);
         }
         GUILayout.Space(20);
 
-        //PoolBase Serialize
-        if (_currentSelectedPoolBase != null)
+        //PoolBase Name
+        GUILayout.BeginHorizontal();
         {
-            _poolManager.poolingPairs = _currentSelectedPoolBase.pairs;
+        	GUILayout.Label("Name", EditorStyles.boldLabel, GUILayout.Width(70));
+        	string str = _currentSelectedPoolCategory.name.ToString();
+        	_currentSelectedPoolCategory.name = EditorGUILayout.DelayedTextField(str);
+	        if (str.Equals(_currentSelectedPoolCategory.name) == false)
+	        {
+		        EditorUtility.SetDirty(_currentSelectedPoolCategory);
+		        AssetDatabase.SaveAssets();
+	        }
+        }
+        GUILayout.EndHorizontal();
+		
+        //PoolBase Serialize
+        if (_currentSelectedPoolCategory != null)
+        {
+            _poolManager.poolingPairs = _currentSelectedPoolCategory.pairs;
             var poolBaseArrayObject = serializedObject.FindProperty("poolingPairs");
             EditorGUILayout.PropertyField(poolBaseArrayObject, true);
             serializedObject.ApplyModifiedProperties();
-            _currentSelectedPoolBase.pairs = _poolManager.poolingPairs;
-            _currentSelectedPoolBase.PairInit();
+            _currentSelectedPoolCategory.pairs = _poolManager.poolingPairs;
+            _currentSelectedPoolCategory.PairInit();
 
             serializedObject.Update();
         }
@@ -106,7 +124,7 @@ public class PoolManagerEditor : Editor
 	{
         try
         {
-            _currentSelectedPoolBase = _poolManager.poolBaseList[index];
+            _currentSelectedPoolCategory = _poolManager.poolBaseList[index];
             _currentSelectedIndex = index;
         }
         catch (System.Exception) { }
@@ -114,9 +132,9 @@ public class PoolManagerEditor : Editor
 
     private void GeneratePoolingEnumFile()
     {
-        if (_currentSelectedPoolBase == null) return;
+        if (_currentSelectedPoolCategory == null) return;
 
-		foreach (var pair in _currentSelectedPoolBase.pairs)
+		foreach (var pair in _currentSelectedPoolCategory.pairs)
 		{
             if (pair.poolType == string.Empty)
 			{
@@ -132,13 +150,13 @@ public class PoolManagerEditor : Editor
 
         StringBuilder codeBuilder = new StringBuilder();
     
-        foreach(var item in _currentSelectedPoolBase.pairs)
+        foreach(var item in _currentSelectedPoolCategory.pairs)
         {
             codeBuilder.Append(item.poolType);
             codeBuilder.Append(", ");
         }
 
-        string className = _currentSelectedPoolBase.name;
+        string className = _currentSelectedPoolCategory.name;
 
         //함수로 묶을 수도 있긴 한데 함수까지 늘려가며 콜을 하고 싶진 않음.
         className = className.Replace(" ", string.Empty);
@@ -156,19 +174,19 @@ public class PoolManagerEditor : Editor
 
         File.WriteAllText($"{path}/EnumTypes/{className}PoolType.cs", code);
 
-        EditorUtility.SetDirty(_currentSelectedPoolBase);
+        EditorUtility.SetDirty(_currentSelectedPoolCategory);
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
 
         Debug.Log("Success!");
     }
 
-    private void CreatePoolBaseAsset(PoolBaseSO clonePoolBaseSo, string fileName = "New Pool Base")
+    private void CreatePoolBaseAsset(PoolCategorySO clonePoolCategorySo, string fileName = "New Pool Base")
     {
         var uniqueFileName = AssetDatabase.GenerateUniqueAssetPath($"Assets/{fileName}.asset");
-        AssetDatabase.CreateAsset(clonePoolBaseSo, uniqueFileName);
-        _currentSelectedPoolBase = clonePoolBaseSo;
-        EditorUtility.SetDirty(_currentSelectedPoolBase);
+        AssetDatabase.CreateAsset(clonePoolCategorySo, uniqueFileName);
+        _currentSelectedPoolCategory = clonePoolCategorySo;
+        EditorUtility.SetDirty(_currentSelectedPoolCategory);
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
     }

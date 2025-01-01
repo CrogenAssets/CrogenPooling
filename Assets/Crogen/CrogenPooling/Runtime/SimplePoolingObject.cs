@@ -10,7 +10,8 @@ public class SimplePoolingObject : MonoBehaviour, IPoolingObject
 
 	[Header("Life")]
 	public bool isAutoPush = true;
-	public float lifeTime;
+	public float duration;
+	private float _curTime = 2f;
 
 	[Header("Events")]
 	public UnityEvent popEvent;
@@ -19,17 +20,20 @@ public class SimplePoolingObject : MonoBehaviour, IPoolingObject
 	public void OnPop()
 	{
 		popEvent?.Invoke();
-		StartCoroutine(CoroutineDie());
 	}
 
 	public void OnPush()
 	{
+		_curTime = 0f;
 		pushEvent?.Invoke();
 	}
 
-	IEnumerator CoroutineDie()
+	private void Update()
 	{
-		yield return new WaitForSeconds(lifeTime);
-		this.Push();
+		_curTime += Time.deltaTime;
+		if(_curTime > duration)
+		{
+			this.Push();
+		}
 	}
 }

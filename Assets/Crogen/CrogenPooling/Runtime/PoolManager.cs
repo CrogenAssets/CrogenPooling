@@ -5,14 +5,14 @@ using System;
 
 public class PoolManager : MonoBehaviour
 {
-    internal static Dictionary<string, Stack<IPoolingObject>> poolDic = new Dictionary<string, Stack<IPoolingObject>>();
-    public List<PoolBaseSO> poolBaseList;
+    internal static Dictionary<string, Stack<IPoolingObject>> poolDict = new Dictionary<string, Stack<IPoolingObject>>();
+    public List<PoolCategorySO> poolBaseList;
     public List<PoolPair> poolingPairs;
     public static Transform Transform;
 
 	private void Awake()
 	{
-        poolDic?.Clear();
+        poolDict?.Clear();
         Transform = transform;
         PopCore.Init(this, poolBaseList);
         PushCore.Init(this);
@@ -24,9 +24,9 @@ public class PoolManager : MonoBehaviour
 		}
     }
 
-	private void MakeObj(PoolBaseSO poolBase)
+	private void MakeObj(PoolCategorySO poolCategory)
     {
-        PoolPair[] poolPairs = poolBase.pairs.ToArray();
+        PoolPair[] poolPairs = poolCategory.pairs.ToArray();
 
         int currentPairIndex = 0;
 
@@ -34,7 +34,7 @@ public class PoolManager : MonoBehaviour
 		{
             try
             {
-                poolDic.Add(poolPair.poolType, new Stack<IPoolingObject>());
+                poolDict.Add(poolPair.poolType, new Stack<IPoolingObject>());
             }
             catch (System.Exception)
             {
@@ -69,7 +69,7 @@ public class PoolManager : MonoBehaviour
 	{
         poolObject.gameObject.transform.SetParent(parent);
         poolObject.gameObject.SetActive(false);
-        poolDic[type].Push(poolObject);
+        poolDict[type].Push(poolObject);
     }
 }
     

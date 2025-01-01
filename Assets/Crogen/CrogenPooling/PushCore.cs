@@ -16,7 +16,7 @@ namespace Crogen.CrogenPooling
             target.OnPush();
             target.gameObject.transform.SetParent(_poolManager.transform);
             target.gameObject.transform.gameObject.SetActive(false);
-            PoolManager.poolDic[target.OriginPoolType].Push(target);
+            PoolManager.poolDict[target.OriginPoolType].Push(target);
         }
     }
 }

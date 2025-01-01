@@ -13,7 +13,7 @@ public class SoundManager : MonoBehaviour
         {
             if (_instance == null)
             {
-                _instance = FindObjectOfType<SoundManager>();
+                _instance = FindAnyObjectByType<SoundManager>();
                 if (_instance == null)
                 {
                     Debug.LogError("No SoundManager found");
@@ -49,7 +49,24 @@ public class SoundManager : MonoBehaviour
             _curSoundPlayer = gameObject.Pop(SoundPoolType.SoundPlayer, Vector3.zero, Quaternion.identity) as SoundPlayer;
             if(_curSoundPlayer)
                 _curSoundPlayer.AudioSource.loop = true;
-            _curSoundPlayer.SetAudioResource(sd.clip);
+            _curSoundPlayer.SetAudioResource(sd.clip, true, 1.0f);
+            
+            StartCoroutine(CoroutineFadeBGM(_oldSoundPlayer, _curSoundPlayer));
+        }
+    }
+    
+    public void PlayBGM(string soundName, float pitch = 1.0f)
+    {
+        if (_soundDataDictionary.TryGetValue(soundName, out SoundData sd))
+        {
+            if (sd.type != SoundType.BGM) return;
+            
+            //사운드 재생
+            _oldSoundPlayer = _curSoundPlayer;
+            _curSoundPlayer = gameObject.Pop(SoundPoolType.SoundPlayer, Vector3.zero, Quaternion.identity) as SoundPlayer;
+            if(_curSoundPlayer)
+                _curSoundPlayer.AudioSource.loop = true;
+            _curSoundPlayer.SetAudioResource(sd.clip, true, pitch);
             
             StartCoroutine(CoroutineFadeBGM(_oldSoundPlayer, _curSoundPlayer));
         }
@@ -79,7 +96,21 @@ public class SoundManager : MonoBehaviour
         oldSoundPlayer?.Push();
     }
     
-    public void PlaySFX(string soundName, Vector3 position = default)
+    public void PlaySFX(string soundName)
+    {
+        if (_soundDataDictionary.TryGetValue(soundName, out SoundData sd))
+        {
+            if (sd.type != SoundType.SFX) return;
+            
+            //사운드 재생
+            SoundPlayer soundPlayer = gameObject.Pop(SoundPoolType.SoundPlayer, Vector3.zero, Quaternion.identity) as SoundPlayer;
+            if(_curSoundPlayer)
+                _curSoundPlayer.AudioSource.loop = false;
+            soundPlayer.SetAudioResource(sd.clip, false, 1.0f);
+        }
+    }
+    
+    public void PlaySFX(string soundName, float pitch = 1.0f, Vector3 position = default)
     {
         if (_soundDataDictionary.TryGetValue(soundName, out SoundData sd))
         {
@@ -89,7 +120,7 @@ public class SoundManager : MonoBehaviour
             SoundPlayer soundPlayer = gameObject.Pop(SoundPoolType.SoundPlayer, position, Quaternion.identity) as SoundPlayer;
             if(_curSoundPlayer)
                 _curSoundPlayer.AudioSource.loop = false;
-            soundPlayer.SetAudioResource(sd.clip);
+            soundPlayer.SetAudioResource(sd.clip, false, pitch);
         }
     }
 }
