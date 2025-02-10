@@ -626,7 +626,10 @@ MonoBehaviour:
   poolBaseList:
   - {fileID: 11400000, guid: 718434f5f088e2a41bc154023a21552c, type: 2}
   - {fileID: 11400000, guid: 265ad6051dcb556468478c955d01d7a6, type: 2}
-  poolingPairs: []
+  poolingPairs:
+  - poolType: TestObject
+    prefab: {fileID: 4549661304509112815, guid: f4c33ca4c5a00d04b872e4fac33e91de, type: 3}
+    poolCount: 10
 --- !u!1 &1786356101
 GameObject:
   m_ObjectHideFlags: 0
